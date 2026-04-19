@@ -1,0 +1,28 @@
+{
+  "name": "bookworm-hub",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "ngocnhod",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -w . -w .env src/bin/www.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "ext": "js,json,ejs,html,env,css"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "http-status-codes": "^2.3.0",
+    "joi": "^18.1.2",
+    "mongoose": "^9.4.1"
+  }
+}

@@ -1,0 +1,59 @@
+<%- include('../layouts/header', { title: 'Login page' }) %>
+<%- include('../layouts/navbar') %>
+<body>
+    <div style="max-width: 500px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
+        <h1>Đăng nhập</h1>
+        
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if (typeof success !== 'undefined' && success) { %>
+            <div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+                <%= success %>
+            </div>
+        <% } %>
+
+        <form action="/users/login" method="POST">
+            <div style="margin-bottom: 15px;">
+                <label for="name" style="display: block; margin-bottom: 5px;">Name:</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    required 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+                    value="<%= typeof formData !== 'undefined' ? formData.name || '' : '' %>"
+                >
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="password" style="display: block; margin-bottom: 5px;">Password:</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+                >
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <button 
+                    type="submit" 
+                    style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;"
+                >
+                    Đăng nhập
+                </button>
+            </div>
+        </form>
+
+        <p style="text-align: center;">
+            Chưa có tài khoản? <a href="/users/register">Đăng ký</a>
+        </p>
+    </div>
+</body>
+</html>
+<%- include('../layouts/footer') %>

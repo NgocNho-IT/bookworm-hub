@@ -1,0 +1,44 @@
+<%- include('../layouts/header', {title: 'Giới thiệu'}) %>
+<%- include('../layouts/navbar') %>
+
+<header class="bg-primary py-5 shadow-sm" style="background: linear-gradient(45deg, #2c3e50, #34495e) !important;">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Về dự án</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Hành trình xây dựng nền tảng Quản lý tủ sách NNIT Bookcase</p>
+        </div>
+    </div>
+</header>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm p-4 border-top border-4 border-primary">
+                <h3 class="fw-bold text-dark mb-3"><i class="bi bi-book me-2 text-primary"></i>NNIT Bookcase là gì?</h3>
+                <p class="text-justify" style="line-height: 1.8;">
+                    <strong>NNIT Bookcase</strong> là một ứng dụng quản lý tủ sách cá nhân hiện đại được phát triển trên nền tảng <strong>Node.js & Express</strong>. 
+                    Ứng dụng được thiết kế nhằm giúp người yêu sách dễ dàng lưu trữ, phân loại và theo dõi lộ trình đọc tập trung vào 3 trạng thái chính: 
+                    <span class="badge bg-info text-dark">Đang đọc</span>, 
+                    <span class="badge bg-success">Đã xong</span> và 
+                    <span class="badge bg-warning text-dark">Muốn mua</span>.
+                </p>
+
+                <hr class="my-4">
+
+                <h3 class="fw-bold text-dark mb-3"><i class="bi bi-person-workspace me-2 text-primary"></i>Đội ngũ phát triển</h3>
+                <p class="text-justify" style="line-height: 1.8;">
+                    Dự án này được phát triển bởi <strong>Đặng Ngọc Nhớ</strong> - Sinh viên chuyên ngành Công nghệ Thông tin, Khóa K24 (Lớp IT24C) tại <strong>Đại học Đông Á (UDA)</strong>.
+                </p>
+                <p class="text-justify" style="line-height: 1.8;">
+                    Với định hướng trở thành một Fullstack Developer, Nhớ đã chuyển đổi và nâng cấp dự án này từ kiến trúc cũ sang hệ sinh thái JavaScript (Node.js, Express, EJS) để nghiên cứu sâu hơn về hiệu năng và khả năng mở rộng của mã nguồn mở. 
+                </p>
+
+                <div class="alert alert-secondary mt-4 text-center border-0 shadow-sm" role="alert">
+                    <i class="bi bi-code-slash fw-bold"></i> Cảm ơn bạn đã đồng hành cùng cộng đồng yêu sách!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

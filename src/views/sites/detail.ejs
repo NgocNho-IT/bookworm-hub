@@ -1,0 +1,22 @@
+<%- include('../layouts/header', {title: title}) %>
+<%- include('../layouts/navbar') %>
+
+<div class="container mt-5">
+    <div class="row">
+
+        <div class="col-md-5">
+            <img src="<%= book.image %>" class="img-fluid" alt="Ảnh sách">
+        </div>
+
+        <div class="col-md-7">
+            <h2><%= book.subject %></h2>
+            <p>Tác giả: <%= book.author %></p>
+            <p>Năm: <%= book.publication_year %></p>
+            <p>Mô tả: <%= book.description %></p>
+            <a href="/" class="btn btn-secondary">QUAY LẠI</a>
+        </div>
+
+    </div>
+</div>
+
+<%- include('../layouts/footer')

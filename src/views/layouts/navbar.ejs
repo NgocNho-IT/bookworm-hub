@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm">
+    <div class="container px-4">
+        <a class="navbar-brand fw-bold fs-3" href="/">NNIT <span class="text-success">Bookcase</span></a>
+        
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+            <span class="bi bi-list fs-1 text-success"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link fw-bold" href="/">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link fw-bold" href="/about">Giới thiệu</a></li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown">Danh mục</a>
+                    <ul class="dropdown-menu border-0 shadow">
+                        <li><a class="dropdown-item" href="/category/lap-trinh">Lập trình</a></li>
+                        <li><a class="dropdown-item" href="/category/tieu-thuyet">Tiểu thuyết</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown">Trạng thái</a>
+                    <ul class="dropdown-menu border-0 shadow">
+                        <li><a class="dropdown-item" href="/status/dang-doc">Đang đọc</a></li>
+                        <li><a class="dropdown-item" href="/status/da-xong">Đã xong</a></li>
+                        <li><a class="dropdown-item" href="/status/muon-mua">Muốn mua</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <form class="d-flex mx-auto" action="/search" method="GET">
+                <div class="input-group search-group" style="width: 280px;">
+                    <input class="form-control border-0 ps-3" type="search" placeholder="Tìm tên sách..." name="q">
+                    <button class="btn btn-dark px-3" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+
+            
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link" href="/users/login">Đăng nhập</a></li>
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-success btn-sm rounded-pill px-4 fw-bold" href="/users/register">Đăng ký</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

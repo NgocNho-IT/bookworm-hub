@@ -1,0 +1,41 @@
+<%- include('../layouts/header', {title: title}) %>
+<%- include('../layouts/navbar') %>
+<div class="container mt-4">
+   <h1>Danh sách sách đang có</h1>
+   <br>
+   <div class="row">
+      <% books.forEach(book => { %>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+         <div class="card h-100" style="width: 100%;">
+            <img src="<%= book.image %>" class="card-img-top" alt="<%= book.subject %>" style="height: 250px; object-fit: contain; padding: 10px;">
+            <div class="card-body d-flex flex-column">
+               <h5 class="card-title"><%= book.subject %></h5>
+               <p class="card-text">Tác giả: <%= book.author %></p>
+               <p class="card-text">Năm xuất bản: <%= book.publication_year %></p>
+               <p class="card-text">Danh mục: <%= book.category %></p>
+               <p class="card-text">Trạng thái: <%= book.status %></p>
+               <a href="/books/<%= book.id %>" class="btn btn-primary mt-auto">Xem chi tiết</a>
+            </div>
+         </div>
+      </div>
+      <% }) %>
+   </div>
+
+   <nav aria-label="Page navigation" class="mt-5">
+      <ul class="pagination justify-content-center">
+         <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="/?page=<%= currentPage - 1 %>">Trang trước</a>
+         </li>
+         <% for(let i = 1; i <= totalPages; i++) { %>
+         <li class="page-item <%= currentPage == i ? 'active' : '' %>">
+            <a class="page-link" href="/?page=<%= i %>"><%= i %></a>
+         </li>
+         <% } %>
+         <li class="page-item <%= currentPage == totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="/?page=<%= parseInt(currentPage) + 1 %>">Trang sau</a>
+         </li>
+      </ul>
+   </nav>
+   
+</div>
+<%- include('../layouts/footer') %>
