@@ -32,6 +32,15 @@ const createUserSchema = Joi.object({
       'string.max': 'Password không được vượt quá {#limit} ký tự',
       'any.required': 'Password là bắt buộc',
     }),
+  confirmPassword: Joi.string()
+    .required()
+    .valid(Joi.ref('password'))
+    .strip()
+    .messages({
+      'any.only': 'Mật khẩu nhập lại không khớp',
+      'string.empty': 'Confirm password không được để trống',
+      'any.required': 'Confirm password là bắt buộc'
+    })
   // address: Joi.object({
   //   street: Joi.string().trim().allow(''),
   //   city: Joi.string().trim().allow(''),
