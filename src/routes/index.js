@@ -1,10 +1,10 @@
 const siteRouter = require('./siteRouter')
 const userRouter = require('./userRouter')
-const bookRoute = require('./bookRouter')
+const bookRouter = require('./bookRouter')
 function setupRoutes(app) {
-    app.use('/', siteRouter),
-    app.use('/users', userRouter),
-    app.use('/books',)
+    app.use('/', siteRouter);
+    app.use('/users', userRouter);
+    app.use('/books', bookRouter);
 }
 
 module.exports = setupRoutes;

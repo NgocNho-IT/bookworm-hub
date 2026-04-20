@@ -13,6 +13,6 @@ siteRouter.get('/category/:cate', siteController.filterByCategory);
 
 siteRouter.get('/status/:stat', siteController.filterByStatus);
 
-siteRouter.get('/books/:id', siteController.bookDetail);
+
 
 module.exports = siteRouter;

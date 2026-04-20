@@ -1,0 +1,84 @@
+<%- include('../layouts/header', {title: title}) %>
+<div class="container mt-4">
+   <div class="row mb-4 align-items-center bg-light p-3 rounded shadow-sm">
+      <div class="col-auto">
+         <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-tags"></i> Danh mục
+            </button>
+            <ul class="dropdown-menu">
+               <li><a class="dropdown-item" href="?category=lap-trinh">Lập trình</a></li>
+               <li><a class="dropdown-item" href="?category=tieu-thuyet">Tiểu thuyết</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="col-auto">
+         <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-bookmark-check"></i> Trạng thái
+            </button>
+            <ul class="dropdown-menu">
+               <li><a class="dropdown-item" href="?status=dang-doc">Đang đọc</a></li>
+               <li><a class="dropdown-item" href="?status=da-xong">Đã xong</a></li>
+               <li><a class="dropdown-item" href="?status=muon-mua">Muốn mua</a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="col-auto">
+         <div class="container-fluid">
+            <form class="d-flex" role="search">
+               <input class="form-control me-2" type="search" placeholder="Tìm theo tên sách..." aria-label="Search" name="q" value="<%= currentQuery.q || '' %>"/>
+               <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+            </form>
+         </div>
+      </div>
+      <div class="col-auto">
+         <a href="/books" class="btn btn-dark btn-sm"><i class="bi bi-funnel-fill"></i> Xóa lọc</a>
+      </div>
+   </div>
+
+   <table class="table table-striped">
+      <thead>
+         <tr>
+            <th scope="col">Ảnh</th>
+            <th scope="col">Tên sách</th>
+            <th scope="col">Tác giả</th>
+            <th scope="col">Năm xuất bản</th>
+            <th scope="col">Danh mục</th>
+            <th scope="col">Trạng thái</th>
+            <th scope="col">Hành động</th>
+         </tr>
+      </thead>
+      <tbody>
+         <% books.forEach(book => { %>
+         <tr>
+            <td><img src="<%= book.image %>" alt="Bìa sách" style="width: 60px; height: 80px; object-fit: cover; border-radius: 4px;"></td>
+            <td><%= book.subject %></td>
+            <td><%= book.author %></td>
+            <td><%= book.publication_year %></td>
+            <td><%= book.category %></td>
+            <td><%= book.status %></td>
+            <td><span class="btn btn-primary"><i class="bi bi-pencil-square"></i></span><span class="btn btn-danger"><i class="bi bi-trash-fill"></i></span></td>
+         </tr>
+         <% }) %>
+      </tbody>
+   </table>
+
+   <nav aria-label="Page navigation" class="mt-5">
+      <ul class="pagination justify-content-center">
+         <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= currentPage - 1 %>">Trang trước</a>
+         </li>
+         <% for(let i = 1; i <= totalPages; i++) { %>
+         <li class="page-item <%= currentPage == i ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+         </li>
+         <% } %>
+         <li class="page-item <%= currentPage == totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= parseInt(currentPage) + 1 %>">Trang sau</a>
+         </li>
+      </ul>
+   </nav>
+
+   <div class="text-center mt-5 mb-5"><a href="/" class="btn btn-success px-4 rounded-pill"><i class="bi bi-house-door me-2"></i> Quay về trang chủ</a></div>
+</div>

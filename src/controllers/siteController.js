@@ -21,13 +21,6 @@ async function home(req, res) {
     }
 }
 
-async function bookDetail(req, res) {
-    const bookId = req.params.id;
-    const book = await Book.findOne({
-        id: parseInt(bookId)
-    })
-    res.render('sites/detail', {book, title: 'Book detail'})
-}
 
 
 async function filterByCategory(req, res) {
@@ -66,7 +59,6 @@ async function search(req, res) {
 
 module.exports = {
     home,
-    bookDetail,
     filterByCategory,
     filterByStatus,
     about,
