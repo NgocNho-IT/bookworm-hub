@@ -54,6 +54,24 @@ const createUserSchema = Joi.object({
   //   .allow(''),
 });
 
+// Schema validation cho việc đăng nhập
+const loginSchema = Joi.object({
+  name: Joi.string()
+    .required()
+    .trim()
+    .messages({
+      'string.empty': 'Tên không được để trống',
+      'any.required': 'Tên là bắt buộc',
+    }),
+  password: Joi.string()
+    .required()
+    .messages({
+      'string.empty': 'Password không được để trống',
+      'any.required': 'Password là bắt buộc',
+    }),
+});
+
 module.exports = {
-  createUserSchema
+  createUserSchema,
+  loginSchema
 };

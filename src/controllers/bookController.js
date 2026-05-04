@@ -25,7 +25,7 @@ async function getAll(req, res) {
         }
         
         // Phân trang
-        const page = parseInt(req.query.page) || 1;
+        const page = Math.max(1, parseInt(req.query.page) || 1);
         const perPage = 4;
         const skip = (page - 1) * perPage;
 

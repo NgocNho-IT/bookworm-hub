@@ -47,10 +47,10 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
     },
-    // sessionId: {
-    //   type: String,
-    //   default: null,
-    // },
+    sessionId: {
+      type: String,
+      default: null,
+    },
     // sessionExpires: {
     //   type: Date,
     //   default: null,

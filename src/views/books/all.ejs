@@ -89,30 +89,34 @@
       </tbody>
    </table>
 
+   <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
    <nav aria-label="Page navigation" class="mt-5">
       <ul class="pagination justify-content-center">
          <% 
             let qStr = '';
             // Cách viết này nó thay thế cho viết cộng chuỗi 
             // Cách viết nội suy biến ${tên_biến} thay vì dùng cộng chuỗi
-            if (currentQuery.q) qStr += `&q=${currentQuery.q}`;
-            if (currentQuery.category) qStr += `&category=${currentQuery.category}`;
-            if (currentQuery.status) qStr += `&status=${currentQuery.status}`;
+            if (typeof currentQuery !== 'undefined') { 
+               if (currentQuery.q) qStr += `&q=${currentQuery.q}`;
+               if (currentQuery.category) qStr += `&category=${currentQuery.category}`;
+               if (currentQuery.status) qStr += `&status=${currentQuery.status}`;
+            }
           %>
 
-         <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
-            <a class="page-link" href="?page=<%= currentPage - 1%><%= qStr %>">Trang trước</a>
+         <li class="page-item <%= currentPage <= 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= currentPage <= 1 ? '#' : '?page=' + (currentPage - 1) + qStr %>">Trang trước</a>
          </li>
          <% for(let i = 1; i <= totalPages; i++) { %>
          <li class="page-item <%= currentPage == i ? 'active' : '' %>">
             <a class="page-link" href="?page=<%= i %><%= qStr %>"><%= i %></a>
          </li>
          <% } %>
-         <li class="page-item <%= currentPage == totalPages ? 'disabled' : '' %>">
-            <a class="page-link" href="?page=<%= parseInt(currentPage) + 1 %><%= qStr %>">Trang sau</a>
+         <li class="page-item <%= currentPage >= totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= currentPage >= totalPages ? '#' : '?page=' + (parseInt(currentPage) + 1) + qStr %>">Trang sau</a>
          </li>
       </ul>
    </nav>
+   <% } %>
 
    <div class="text-center mt-5 mb-5"><a href="/" class="btn btn-success px-4 rounded-pill"><i class="bi bi-house-door me-2"></i> Quay về trang chủ</a></div>
 </div>

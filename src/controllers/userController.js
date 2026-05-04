@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const User = require('../models/users.js');
-const { createUserSchema } = require('../helpers/joi_helper');
+const { createUserSchema, loginSchema } = require('../helpers/joi_helper');
 
 async function showRegister(req, res) {
     res.render('users/register', { error: null, formData: {} })
@@ -62,8 +63,90 @@ async function showLogin(req, res) {
     res.render('users/login', { error: null, success: success, formData: {} });
 }
 
+// Xử lý đăng nhập
+async function login(req, res, next) {
+    try {
+        // Validate
+        const {error, value} = loginSchema.validate(req.body);
+        if (error) {
+            return res.render('users/login', {
+                error: error.details[0].message,
+                success: null,
+                formData: req.body
+            });
+        }
+
+
+        // Check user theo name
+        const userData = await User.findOne({name: value.name});
+        console.log(userData);
+        if (!userData) {
+            return res.render('users/login', {
+                error: 'Sai tên người dùng',
+                success: null,
+                formData: req.body
+            });
+        }
+
+        // Xác thực password
+        const isPasswordValid = await bcrypt.compare(value.password, userData.password);
+        if (!isPasswordValid) {
+            return res.render('users/login', {
+                error: 'Sai tên người dùng hoặc mật khẩu',
+                success: null,
+                formData: req.body
+            });
+        }
+
+        // Tạo và lưu session id vào database
+        const sessionId = crypto.randomBytes(16).toString('hex');
+        await User.updateOne(
+            { name: userData.name },
+            { $set: { sessionId: sessionId } }
+        );
+
+        // Set cookie session
+        res.cookie(
+            'sessionId',
+            sessionId,
+            {
+                httpOnly: true,
+                maxAge: 3 * 24 * 60 * 60 * 1000,
+                signed: true
+            }
+        );
+
+        res.redirect('/');
+    } catch (err) {
+        next(err);
+    }
+}
+
+// Xử lý đăng xuất
+async function logout(req, res) {
+    try {
+        const sessionId = req.signedCookies.sessionId;
+        if (sessionId) {
+            // Xóa session ID khỏi db
+            await User.deleteOne(
+                { sessionId: sessionId},
+                { $set: {sessionId: null}}
+            );
+
+            // Clear cookie
+            res.clearCookie('sessionId');
+
+            // Chuyển hướng đến trang đăng nhập
+            res.redirect('users/login');
+        }
+    } catch (err) {
+        next(err);
+    }
+}
 module.exports = {
     showRegister,
     register,
-    showLogin
+    showLogin,
+    login,
+    logout
 };

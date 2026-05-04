@@ -1,0 +1,39 @@
+<%- include('../layouts/header', { title: 'Error' }) %>
+<body>
+    <div style="max-width: 800px; margin: 50px auto; padding: 20px; text-align: center;">
+        <div style="margin-bottom: 30px;">
+            <h1 style="font-size: 72px; color: #dc3545; margin: 0;"><%= statusCode %></h1>
+            <h2 style="color: #6c757d; margin: 10px 0;"><%= message %></h2>
+        </div>
+
+        <% if (statusCode === 404) { %>
+            <p style="font-size: 18px; color: #6c757d; margin: 20px 0;">
+                Trang bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.
+            </p>
+        <% } else if (statusCode === 500) { %>
+            <p style="font-size: 18px; color: #6c757d; margin: 20px 0;">
+                Đã xảy ra lỗi trên server. Vui lòng thử lại sau.
+            </p>
+        <% } else if (statusCode === 403) { %>
+            <p style="font-size: 18px; color: #6c757d; margin: 20px 0;">
+                Bạn không có quyền truy cập vào trang này.
+            </p>
+        <% } else { %>
+            <p style="font-size: 18px; color: #6c757d; margin: 20px 0;">
+                Đã xảy ra lỗi. Vui lòng thử lại.
+            </p>
+        <% } %>
+
+        <div style="margin-top: 30px;">
+            <a href="/" 
+                style="display: inline-block; padding: 12px 30px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;">
+                Về trang chủ
+            </a>
+            <a href="javascript:history.back()" 
+                style="display: inline-block; padding: 12px 30px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px; font-size: 16px; margin-left: 10px;">
+                Quay lại
+            </a>
+        </div>
+    </div>
+</body>
+</html>
