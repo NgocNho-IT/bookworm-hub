@@ -79,10 +79,10 @@ async function login(req, res, next) {
 
         // Check user theo name
         const userData = await User.findOne({name: value.name});
-        console.log(userData);
+        // console.log(userData);
         if (!userData) {
             return res.render('users/login', {
-                error: 'Sai tên người dùng',
+                error: 'Sai tên người dùng hoặc mật khẩu',
                 success: null,
                 formData: req.body
             });
@@ -128,7 +128,7 @@ async function logout(req, res) {
         const sessionId = req.signedCookies.sessionId;
         if (sessionId) {
             // Xóa session ID khỏi db
-            await User.deleteOne(
+            await User.updateOne(
                 { sessionId: sessionId},
                 { $set: {sessionId: null}}
             );
@@ -137,7 +137,7 @@ async function logout(req, res) {
             res.clearCookie('sessionId');
 
             // Chuyển hướng đến trang đăng nhập
-            res.redirect('users/login');
+            res.redirect('/users/login');
         }
     } catch (err) {
         next(err);

@@ -27,6 +27,29 @@ async function requireAuth(req, res, next) {
     
 }
 
+async function checkUser(req, res, next) {
+    try {
+        const sessionId = req.signedCookies.sessionId;
+        if (sessionId) {
+            const user = await User.findOne({sessionId: sessionId}).select('-password');
+            if (user) {
+                // Sử dụng biến toàn cục res.locals để dùng được ở mọi nơi
+                res.locals.user = user;
+            } else {
+                res.locals.user = null;
+            }
+            
+        } else {
+            res.locals.user = null;
+        }
+
+        next();
+    } catch (err) {
+        next(err);
+    }
+    
+}
 module.exports = {
     requireAuth,
+    checkUser
 };

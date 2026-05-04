@@ -1,51 +1,88 @@
 <nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm">
-    <div class="container px-4">
-        <a class="navbar-brand fw-bold fs-3" href="/">NNIT <span class="text-success">Bookcase</span></a>
-        
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
-            <span class="bi bi-list fs-1 text-success"></span>
+  <div class="container px-4">
+    <% if (locals.user) { %>
+    <a class="navbar-brand fw-bold fs-3" href="/">NNIT <span class="text-success">Bookcase</span></a>
+    <% } else { %>
+     <a class="navbar-brand fw-bold fs-3" href="#">NNIT <span class="text-success">Bookcase</span></a>
+    <% } %>
+
+    <div class="collapse navbar-collapse" id="navContent">
+      <!-- 1. KHU VỰC MENU TRÁI -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+        <% if (locals.user) { %>
+          <!-- Full Menu khi ĐÃ ĐĂNG NHẬP -->
+          <li class="nav-item"><a class="nav-link fw-bold" href="/">Trang chủ</a></li>
+          <li class="nav-item"><a class="nav-link fw-bold" href="/about">Giới thiệu</a></li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown">Danh mục</a>
+            <ul class="dropdown-menu border-0 shadow">
+              <li><a class="dropdown-item" href="/category/lap-trinh">Lập trình</a></li>
+              <li><a class="dropdown-item" href="/category/tieu-thuyet">Tiểu thuyết</a></li>
+            </ul>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown">Trạng thái</a>
+            <ul class="dropdown-menu border-0 shadow">
+              <li><a class="dropdown-item" href="/status/dang-doc">Đang đọc</a></li>
+              <li><a class="dropdown-item" href="/status/da-xong">Đã xong</a></li>
+              <li><a class="dropdown-item" href="/status/muon-mua">Muốn mua</a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <!-- Menu rút gọn khi CHƯA ĐĂNG NHẬP -->
+          <li class="nav-item"><a class="nav-link fw-bold" href="/about">Giới thiệu</a></li>
+        <% } %>
+      </ul>
+      
+      <!-- 2. KHU VỰC TÌM KIẾM (Chỉ hiện khi ĐÃ ĐĂNG NHẬP) -->
+      <% if (locals.user) { %>
+        <form class="d-flex mx-auto" action="/search" method="GET">
+          <div class="input-group search-group" style="width: 280px">
+            <input class="form-control border-0 ps-3" type="search" placeholder="Tìm tên sách..." name="q" />
+            <button class="btn btn-dark px-3" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+      <% } %>
+
+      <!-- 3. KHU VỰC TÀI KHOẢN (Luôn hiện, nhưng đổi nội dung bên trong) -->
+      <div class="dropdown <%= !locals.user ? 'ms-auto' : '' %>"> 
+        <!-- Thêm ms-auto bằng EJS để đẩy nút này sang phải khi thanh search bị ẩn -->
+        <button class="btn btn-close-white border-0 dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-person-circle fs-4"></i>
         </button>
-        
-        <div class="collapse navbar-collapse" id="navContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link fw-bold" href="/">Trang chủ</a></li>
-                <li class="nav-item"><a class="nav-link fw-bold" href="/about">Giới thiệu</a></li>
-                
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown">Danh mục</a>
-                    <ul class="dropdown-menu border-0 shadow">
-                        <li><a class="dropdown-item" href="/category/lap-trinh">Lập trình</a></li>
-                        <li><a class="dropdown-item" href="/category/tieu-thuyet">Tiểu thuyết</a></li>
-                    </ul>
-                </li>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+          <li><h6 class="dropdown-header">Tài khoản</h6></li>
+          
+          <% if (locals.user) { %>
+            <li>
+              <a class="dropdown-item py-2 text-danger" href="/books">
+                <i class="bi bi-journal-bookmark me-2"></i> Quản lý tủ sách
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item py-2" href="/users/logout">
+                <i class="bi bi-power me-2"></i> Đăng xuất
+              </a>
+            </li>
+          <% } else { %>
+            <li>
+              <a class="dropdown-item py-2" href="/users/login">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Đăng nhập
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item py-2" href="/users/register">
+                <i class="bi bi-person-plus me-2"></i> Đăng ký
+              </a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown">Trạng thái</a>
-                    <ul class="dropdown-menu border-0 shadow">
-                        <li><a class="dropdown-item" href="/status/dang-doc">Đang đọc</a></li>
-                        <li><a class="dropdown-item" href="/status/da-xong">Đã xong</a></li>
-                        <li><a class="dropdown-item" href="/status/muon-mua">Muốn mua</a></li>
-                    </ul>
-                </li>
-            </ul>
-
-            <form class="d-flex mx-auto" action="/search" method="GET">
-                <div class="input-group search-group" style="width: 280px;">
-                    <input class="form-control border-0 ps-3" type="search" placeholder="Tìm tên sách..." name="q">
-                    <button class="btn btn-dark px-3" type="submit"><i class="bi bi-search"></i></button>
-                </div>
-            </form>
-
-            
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link" href="/users/login">Đăng nhập</a></li>
-                <li class="nav-item ms-lg-2">
-                    <a class="btn btn-success btn-sm rounded-pill px-4 fw-bold" href="/users/register">Đăng ký</a>
-                </li>
-                <li class="nav-item ms-lg-2">
-                    <a class="btn btn-primary btn-sm rounded-pill px-2 fw-bold" href="/books">Quản lý tủ sách</a>
-                </li>
-            </ul>
-        </div>
     </div>
+  </div>
 </nav>
