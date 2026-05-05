@@ -1,62 +1,48 @@
-const Book = require('../models/books.js');
+const bookService = require('../services/bookService');
+const Book = require('../models/books'); // Giữ lại để dùng cho bookDetail
 
 async function getAll(req, res) {
     try {
-        // Ta có 3 bộ lọc nằm trong 1 trang nên phải có 1 object chứa ba cái 
-        // điều kiện lọc đó
-        let query = {};
+        // Đóng gói tất cả params/query từ URL thành 1 object
+        const options = {
+            search: req.query.q,
+            categorySlug: req.query.category,
+            statusSlug: req.query.status,
+            page: Math.max(1, parseInt(req.query.page) || 1),
+            perPage: 4
+        };
 
-        // Bộ lọc tìm kiếm
-        if (req.query.q) {
-            query.subject = {
-                $regex: req.query.q,
-                $options: 'i'
-            }
-        }
+        // Quăng cho Service xử lý
+        const result = await bookService.getBooksAdvanced(req.user._id, options);
 
-        // Bộ lọc danh mục
-        if (req.query.category) {
-            query.category_slug = req.query.category;
-        }
-
-        // Bộ lọc trạng thái
-        if (req.query.status) {
-            query.status_slug = req.query.status;
-        }
-        
-        // Phân trang
-        const page = Math.max(1, parseInt(req.query.page) || 1);
-        const perPage = 4;
-        const skip = (page - 1) * perPage;
-
-        // Truy vấn
-        const books = await Book.find(query)
-            .sort({ subject: -1})
-            .skip(skip)
-            .limit(perPage);
-        
-        // Tính số trang để đưa vào ejs vẽ ra số nút bấm cần thiết
-        // Đếm tổng số bản ghi (document) đang có trong bảng(collection) books
-        const totalItems = await Book.countDocuments(query);
-        // Tính tổng số trang
-        const totalPages = Math.ceil(totalItems / perPage);
-
-        res.render('books/all', {books, currentPage: page, totalPages, currentQuery: req.query, title: 'Book page'});
+        res.render('books/all', {
+            books: result.books, 
+            currentPage: result.currentPage, 
+            totalPages: result.totalPages, 
+            currentQuery: req.query, 
+            title: 'Book page'
+        });
 
     } catch (error) {
+        console.log(error);
         res.status(500).send("Lỗi Server");
     }
 }
 
 async function bookDetail(req, res) {
-    const bookId = req.params.id;
-    const book = await Book.findOne({
-        id: parseInt(bookId)
-    })
-    res.render('books/detail', {book, title: 'Book detail'})
+    try {
+        // Truyền cả ID sách trên URL và ID của User xuống Service
+        const book = await bookService.getBookById(req.params.id, req.user._id);
+        
+        if (!book) {
+            return res.status(404).send("Không tìm thấy sách hoặc bạn không có quyền xem cuốn sách này");
+        }
+        
+        res.render('books/detail', { book, title: 'Book detail' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Lỗi Server");
+    }
 }
 
-module.exports = {
-    getAll,
-    bookDetail
-};
+module.exports = { getAll, bookDetail };

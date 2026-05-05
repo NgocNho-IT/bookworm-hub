@@ -77,8 +77,8 @@
             <td><%= book.subject %></td>
             <td><%= book.author %></td>
             <td><%= book.publication_year %></td>
-            <td><%= book.category %></td>
-            <td><%= book.status %></td>
+            <td><%= book.idCategory.name %></td>
+            <td><%= book.idStatus.name %></td>
             <td><span class="btn btn-primary"><i class="bi bi-pencil-square"></i></span><span class="btn btn-danger"><i class="bi bi-trash-fill"></i></span></td>
          </tr>
          <% }) %>

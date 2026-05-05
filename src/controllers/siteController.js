@@ -1,66 +1,89 @@
-const Book = require('../models/books.js')
+// controllers/siteController.js
+const bookService = require('../services/bookService');
 
 async function home(req, res) {
-    try{
-        const page = parseInt(req.query.page) || 1;
-        const perPage = 4;
-        const skip = (page - 1) * perPage;
-
-        const books = await Book.find()
-            .sort({ subject: 1 })
-            .skip(skip)
-            .limit(perPage);
-
-        const totalItems = await Book.countDocuments();
-        const totalPages = Math.ceil(totalItems / perPage);
-
-        res.render('sites/home', {books, currentPage: page, totalPages, title: 'Home page'})
-
-    } catch (error) {
-        res.status(500).send("Lỗi Server");
+    try {
+        // TRANG CHỦ: Duy nhất trang này truyền page và perPage để phân trang
+        const options = { 
+            page: parseInt(req.query.page) || 1, 
+            perPage: 4 
+        };
+        const result = await bookService.getBooksAdvanced(req.user._id, options);
+        
+        res.render('sites/home', { 
+            books: result.books,
+            currentPage: result.currentPage,
+            totalPages: result.totalPages,
+            title: 'Home page' 
+        });
+    } catch (error) { 
+        res.status(500).send("Lỗi Server"); 
     }
 }
 
-
-
 async function filterByCategory(req, res) {
-    const category = req.params.cate
-    const books = await Book.find({
-        category_slug: category
-    })
-    res.render('sites/category', {books, title: 'Category page'})
+    try {
+        // LỌC THEO DANH MỤC: Không truyền page/perPage => Service sẽ lấy hết[cite: 2]
+        const options = { 
+            categorySlug: req.params.cate 
+        };
+        const result = await bookService.getBooksAdvanced(req.user._id, options);
+        
+        res.render('sites/category', { 
+            books: result.books, 
+            title: 'Category page' 
+        });
+    } catch (error) { 
+        res.status(500).send("Lỗi Server"); 
+    }
 }
 
 async function filterByStatus(req, res) {
-    const status = req.params.stat
-    const books = await Book.find({
-        status_slug: status
-    })
-    res.render('sites/status', {books, title: 'Status page'})
-}
-
-async function about(req, res) {
-    res.render('sites/about', {title: 'About page'})
+    try {
+        // LỌC THEO TRẠNG THÁI: Hiển thị toàn bộ sách có trạng thái này[cite: 2]
+        const options = { 
+            statusSlug: req.params.stat 
+        };
+        const result = await bookService.getBooksAdvanced(req.user._id, options);
+        
+        res.render('sites/status', { 
+            books: result.books, 
+            title: 'Status page' 
+        });
+    } catch (error) { 
+        res.status(500).send("Lỗi Server"); 
+    }
 }
 
 async function search(req, res) {
-    const keyword = req.query.q
-    if (!keyword) {
-        return res.redirect("/")
+    try {
+        const keyword = req.query.q;
+        if (!keyword) return res.redirect("/");
+        
+        // TÌM KIẾM: Hiện tại cũng sẽ hiển thị toàn bộ kết quả tìm được[cite: 2]
+        const options = { 
+            search: keyword 
+        };
+        const result = await bookService.getBooksAdvanced(req.user._id, options);
+        
+        res.render('sites/search', { 
+            books: result.books, 
+            keyword, 
+            title: 'Search page' 
+        });
+    } catch (error) { 
+        res.status(500).send("Lỗi Server"); 
     }
-    const books = await Book.find({
-        subject: {
-            $regex: keyword,
-            $options: 'i'
-        }
-    })
-    res.render('sites/search', {books, keyword, title: 'Search page'})
 }
 
-module.exports = {
-    home,
-    filterByCategory,
-    filterByStatus,
-    about,
-    search
+async function about(req, res) {
+    res.render('sites/about', { title: 'About page' });
+}
+
+module.exports = { 
+    home, 
+    filterByCategory, 
+    filterByStatus, 
+    about, 
+    search 
 };

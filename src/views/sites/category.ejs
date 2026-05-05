@@ -2,11 +2,11 @@
 <%- include('../layouts/navbar') %>
 
 <div class="container mt-4">
-    <h1>Danh sách cho danh mục: <%= books[0].category %></h1>
-    <br>
-
+    
+    <% if (books && books.length > 0) { %>
     <div class="row">
-
+        <h1>Danh sách cho danh mục: <%= books[0].idCategory.name %></h1>
+        <br>
         <% books.forEach(book => { %>
             
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"> <div class="card h-100" style="width: 100%;"> <img src="<%= book.image %>" class="card-img-top" alt="<%= book.subject %>" style="height: 250px; object-fit: contain; padding: 10px;">
@@ -14,15 +14,19 @@
                         <h5 class="card-title"><%= book.subject %></h5>
                         <p class="card-text">Tác giả: <%= book.author %></p>
                         <p class="card-text">Năm xuất bản: <%= book.publication_year %></p>
-                        <p class="card-text">Danh mục: <%= book.category %></p>
-                        <p class="card-text">Trạng thái: <%= book.status %></p>
+                        <p class="card-text">Danh mục: <%= book.idCategory.name %></p>
+                        <p class="card-text">Trạng thái: <%= book.idStatus.name %></p>
                         <a href="/books/<%= book.id %>" class="btn btn-primary mt-auto">Xem chi tiết</a>
                     </div>
                 </div>
             </div>
-
         <% }) %>
         </div>
+        <% } else { %>
+            <div><h1>Hiện tại bạn chưa có quyển sách nào. Vui lòng thêm sách nhé!</h1></div>
+        <% } %>
+
+
 </div>
 
 <%- include('../layouts/footer') %>

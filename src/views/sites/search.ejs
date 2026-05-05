@@ -16,8 +16,8 @@
                         <h5 class="card-title"><%= book.subject %></h5>
                         <p class="card-text">Tác giả: <%= book.author %></p>
                         <p class="card-text">Năm xuất bản: <%= book.publication_year %></p>
-                        <p class="card-text">Danh mục: <%= book.category %></p>
-                        <p class="card-text">Trạng thái: <%= book.status %></p>
+                        <p class="card-text">Danh mục: <%= book.idCategory.name %></p>
+                        <p class="card-text">Trạng thái: <%= book.idStatus.name %></p>
                         <a href="/books/<%= book.id %>" class="btn btn-primary mt-auto">Xem chi tiết</a>
                     </div>
                 </div>
