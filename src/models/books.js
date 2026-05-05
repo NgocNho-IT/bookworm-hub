@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema(
     {
-        id: { 
-            type: Number, 
-            required: true, 
-            unique: true 
-        },
         subject: { 
             type: String, 
             required: true,
@@ -22,23 +17,20 @@ const bookSchema = new mongoose.Schema(
             min: [1000, 'Năm xuất bản không hợp lệ'],
             max: [new Date().getFullYear(), 'Năm xuất bản không được lớn hơn năm hiện tại']
         },
-        status: { 
-            type: String, 
-            required: true,
-            enum: ['Đã xong', 'Đang đọc', 'Muốn mua'] 
+        idUser: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
         },
-        status_slug: { 
-            type: String, 
-            required: true,
-            enum: ['da-xong', 'dang-doc', 'muon-mua']
-        },
-        category: { 
-            type: String, 
-            required: true 
-        },
-        category_slug: { 
-            type: String, 
-            required: true 
+        idCategory: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category',
+            required: true
+        }, 
+        idStatus: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Status',
+            required: true
         },
         image: { 
             type: String 
@@ -48,8 +40,9 @@ const bookSchema = new mongoose.Schema(
         }
     },
     {
-        timestamps: true,      
-        collection: 'books'
+        collection: 'books',
+        timestamps: true
+        
     }
 );
 
