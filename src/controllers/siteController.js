@@ -1,9 +1,7 @@
-// controllers/siteController.js
 const bookService = require('../services/bookService');
 
-async function home(req, res) {
+async function home(req, res, next) {
     try {
-        // TRANG CHỦ: Duy nhất trang này truyền page và perPage để phân trang
         const options = { 
             page: parseInt(req.query.page) || 1, 
             perPage: 4 
@@ -16,14 +14,13 @@ async function home(req, res) {
             totalPages: result.totalPages,
             title: 'Home page' 
         });
-    } catch (error) { 
-        res.status(500).send("Lỗi Server"); 
+    } catch (err) { 
+        next(err);
     }
 }
 
-async function filterByCategory(req, res) {
+async function filterByCategory(req, res, next) {
     try {
-        // LỌC THEO DANH MỤC: Không truyền page/perPage => Service sẽ lấy hết
         const options = { 
             categorySlug: req.params.cate 
         };
@@ -33,14 +30,13 @@ async function filterByCategory(req, res) {
             books: result.books, 
             title: 'Category page' 
         });
-    } catch (error) { 
-        res.status(500).send("Lỗi Server"); 
+    } catch (err) { 
+        next(err);
     }
 }
 
-async function filterByStatus(req, res) {
+async function filterByStatus(req, res, next) {
     try {
-        // LỌC THEO TRẠNG THÁI: Hiển thị toàn bộ sách có trạng thái này[cite: 2]
         const options = { 
             statusSlug: req.params.stat 
         };
@@ -50,8 +46,8 @@ async function filterByStatus(req, res) {
             books: result.books, 
             title: 'Status page' 
         });
-    } catch (error) { 
-        res.status(500).send("Lỗi Server"); 
+    } catch (err) { 
+        next(err)
     }
 }
 
@@ -60,7 +56,6 @@ async function search(req, res) {
         const keyword = req.query.q;
         if (!keyword) return res.redirect("/");
         
-        // TÌM KIẾM: Hiện tại cũng sẽ hiển thị toàn bộ kết quả tìm được
         const options = { 
             search: keyword 
         };
@@ -71,8 +66,8 @@ async function search(req, res) {
             keyword, 
             title: 'Search page' 
         });
-    } catch (error) { 
-        res.status(500).send("Lỗi Server"); 
+    } catch (err) { 
+        next(err);
     }
 }
 

@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <% if (books && books.length > 0) { %>
     <div class="row">
-        <h1>Danh sách sách theo trạng thái: <%= books[0].status %></h1>
+        <h1>Danh sách sách theo trạng thái: <%= books[0].idStatus.name %></h1>
         <br>
         <% books.forEach(book => { %>
             
@@ -23,7 +23,7 @@
         <% }) %>
         </div>
         <% } else { %>
-           <h1>Hiện tại bạn chưa có quyển sách nào. Hãy thêm nhé!</h1>
+           <%- include('../layouts/noBook') %>
         <% } %>
 </div>
 

@@ -18,26 +18,26 @@
                         
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tiêu đề sách <span class="text-danger">*</span></label>
-                            <input type="text" name="subject" class="form-control" placeholder="Nhập tên sách..." value="<%= formData.subject || '' %>">
+                            <input type="text" name="subject" class="form-control" placeholder="Nhập tên sách..." value="<%= book.subject || '' %>">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tác giả <span class="text-danger">*</span></label>
-                            <input type="text" name="author" class="form-control" placeholder="Nhập tên tác giả..." value="<%= formData.author || '' %>">
+                            <input type="text" name="author" class="form-control" placeholder="Nhập tên tác giả..." value="<%= book.author || '' %>">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Năm xuất bản</label>
-                            <input type="number" name="publication_year" class="form-control" placeholder="Ví dụ: 2023" value="<%= formData.publication_year || '' %>">
+                            <input type="number" name="publication_year" class="form-control" placeholder="Ví dụ: 2023" value="<%= book.publication_year || '' %>">
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Danh mục <span class="text-danger">*</span></label>
                                 <select name="idCategory" class="form-select">
-                                    <option value="" disabled <%= !formData.idCategory ? 'selected' : '' %>>-- Chọn danh mục --</option>
+                                    <option value="" disabled <%= !book.idCategory ? 'selected' : '' %>>-- Chọn danh mục --</option>
                                     <% categories.forEach(cate => { %>
-                                        <option value="<%= cate._id %>" <%= (formData.idCategory === cate._id.toString()) ? 'selected' : '' %>>
+                                        <option value="<%= cate._id %>" <%= (book.idCategory === cate._id.toString()) ? 'selected' : '' %>>
                                             <%= cate.name %>
                                         </option>
                                     <% }) %>
@@ -47,9 +47,9 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
                                 <select name="idStatus" class="form-select">
-                                    <option value="" disabled <%= !formData.idStatus ? 'selected' : '' %>>-- Chọn trạng thái --</option>
+                                    <option value="" disabled <%= !book.idStatus ? 'selected' : '' %>>-- Chọn trạng thái --</option>
                                     <% statuses.forEach(stat => { %>
-                                        <option value="<%= stat._id %>" <%= (formData.idStatus === stat._id.toString()) ? 'selected' : '' %>>
+                                        <option value="<%= stat._id %>" <%= (book.idStatus === stat._id.toString()) ? 'selected' : '' %>>
                                             <%= stat.name %>
                                         </option>
                                     <% }) %>
@@ -59,12 +59,12 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Link hình ảnh</label>
-                            <input type="text" name="image" class="form-control" placeholder="Nhập URL ảnh bìa sách..." value="<%= formData.image || '' %>">
+                            <input type="text" name="image" class="form-control" placeholder="Nhập URL ảnh bìa sách..." value="<%= book.image || '' %>">
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-bold">Mô tả sách</label>
-                            <textarea name="description" class="form-control" rows="3" placeholder="Vài dòng tóm tắt nội dung..."><%= formData.description || '' %></textarea>
+                            <textarea name="description" class="form-control" rows="3" placeholder="Vài dòng tóm tắt nội dung..."><%= book.description || '' %></textarea>
                         </div>
 
                         <div class="d-grid gap-2">

@@ -49,6 +49,10 @@ async function checkUser(req, res, next) {
     }
     
 }
+
+
+
+
 module.exports = {
     requireAuth,
     checkUser

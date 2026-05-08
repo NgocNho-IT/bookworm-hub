@@ -93,7 +93,6 @@ const bookSchema = Joi.object({
         'number.max': `Năm xuất bản không được lớn hơn năm hiện tại (${currentYear})`
     }),
     
-    // Validate ObjectId của MongoDB (chuỗi Hex dài 24 ký tự)
     idCategory: Joi.string().hex().length(24).required().messages({
         'string.hex': 'ID Danh mục không đúng định dạng',
         'string.length': 'ID Danh mục phải có đúng 24 ký tự',

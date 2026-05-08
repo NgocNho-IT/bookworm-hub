@@ -2,7 +2,6 @@ const bookService = require('../services/bookService');
 const { bookSchema } = require('../helpers/joi_helper');
 async function getAll(req, res) {
     try {
-        // Đóng gói tất cả params/query từ URL thành 1 object
         const options = {
             search: req.query.q,
             categorySlug: req.query.category,
@@ -11,7 +10,6 @@ async function getAll(req, res) {
             perPage: 4
         };
 
-        // Quăng cho Service xử lý
         const result = await bookService.getBooksAdvanced(req.user._id, options);
 
         res.render('books/all', {
@@ -22,11 +20,11 @@ async function getAll(req, res) {
             title: 'Book page'
         });
 
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Lỗi Server");
+    } catch (err) {
+       next(err);
     }
 }
+
 
 
 async function createBook(req, res, next) {
@@ -36,25 +34,15 @@ async function createBook(req, res, next) {
             categories, 
             statuses, 
             error: null, 
-            formData: {} 
+            book: {} 
         });
     } catch (err) { next(err); }
 }
 
+
 async function create(req, res, next) {
     try {
-        const { error, value } = bookSchema.validate(req.body);
-        if (error) {
-            const { categories, statuses } = await bookService.getBookMetadata();
-            return res.render('books/create', { 
-                categories, 
-                statuses, 
-                error: error.details[0].message, 
-                formData: req.body 
-            });
-        }
-
-        await bookService.createBook(value, req.user._id);
+        await bookService.createBook(req.body, req.user._id);
         res.redirect('/books');
     } catch (err) { next(err); }
 }
@@ -67,13 +55,6 @@ async function updateBook(req, res, next) {
             bookService.getBookMetadata()
         ]);
 
-        if (!book) {
-            const err = new Error('Không tìm thấy sách hoặc không có quyền!');
-            err.status = 404;
-            return next(err); 
-        }
-
-        // Truyền đúng biến book (từ DB) ra EJS, KHÔNG dùng formData nữa
         res.render('books/update', {
             book,
             categories: metadata.categories,
@@ -83,28 +64,10 @@ async function updateBook(req, res, next) {
     } catch (err) { next(err); }
 }
 
+
 async function update(req, res, next) {
     try {
-        const { error, value } = bookSchema.validate(req.body);
-        
-        if (error) {
-            const { categories, statuses } = await bookService.getBookMetadata();
-            
-            // TUYỆT CHIÊU GỘP: Tạo object book chứa cả ID gốc và dữ liệu user vừa nhập sai
-            const fakeBook = {
-                _id: req.params.id,
-                ...req.body
-            };
-
-            return res.render('books/update', {
-                book: fakeBook, // Trả về fakeBook thay vì tách rời book và formData
-                categories,
-                statuses,
-                error: error.details[0].message
-            });
-        }
-
-        await bookService.updateBook(req.params.id, req.user._id, value);
+        await bookService.updateBook(req.params.id, req.user._id, req.body);
         res.redirect('/books');
     } catch (err) { next(err); }
 }
@@ -126,19 +89,19 @@ async function deleteBook(req, res, next) {
 }
 
 // book detail
-async function bookDetail(req, res) {
+async function bookDetail(req, res, next) {
     try {
-        // Truyền cả ID sách trên URL và ID của User xuống Service
         const book = await bookService.getBookById(req.params.id, req.user._id);
         
         if (!book) {
-            return res.status(404).send("Không tìm thấy sách hoặc bạn không có quyền xem cuốn sách này");
+            const err = new Error('Không tìm thấy sách!');
+            err.status = 404;
+            return next(err); 
         }
         
         res.render('books/detail', { book, title: 'Book detail' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Lỗi Server");
+    } catch (err) {
+        next(err);
     }
 }
 module.exports = { 
