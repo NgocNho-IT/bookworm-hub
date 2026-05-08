@@ -1,6 +1,5 @@
 const bookService = require('../services/bookService');
-const Book = require('../models/books'); // Giữ lại để dùng cho bookDetail
-
+const { bookSchema } = require('../helpers/joi_helper');
 async function getAll(req, res) {
     try {
         // Đóng gói tất cả params/query từ URL thành 1 object
@@ -29,6 +28,104 @@ async function getAll(req, res) {
     }
 }
 
+
+async function createBook(req, res, next) {
+    try {
+        const { categories, statuses } = await bookService.getBookMetadata();
+        res.render('books/create', { 
+            categories, 
+            statuses, 
+            error: null, 
+            formData: {} 
+        });
+    } catch (err) { next(err); }
+}
+
+async function create(req, res, next) {
+    try {
+        const { error, value } = bookSchema.validate(req.body);
+        if (error) {
+            const { categories, statuses } = await bookService.getBookMetadata();
+            return res.render('books/create', { 
+                categories, 
+                statuses, 
+                error: error.details[0].message, 
+                formData: req.body 
+            });
+        }
+
+        await bookService.createBook(value, req.user._id);
+        res.redirect('/books');
+    } catch (err) { next(err); }
+}
+
+
+async function updateBook(req, res, next) {
+    try {
+        const [book, metadata] = await Promise.all([
+            bookService.getBookById(req.params.id, req.user._id),
+            bookService.getBookMetadata()
+        ]);
+
+        if (!book) {
+            const err = new Error('Không tìm thấy sách hoặc không có quyền!');
+            err.status = 404;
+            return next(err); 
+        }
+
+        // Truyền đúng biến book (từ DB) ra EJS, KHÔNG dùng formData nữa
+        res.render('books/update', {
+            book,
+            categories: metadata.categories,
+            statuses: metadata.statuses,
+            error: null
+        });
+    } catch (err) { next(err); }
+}
+
+async function update(req, res, next) {
+    try {
+        const { error, value } = bookSchema.validate(req.body);
+        
+        if (error) {
+            const { categories, statuses } = await bookService.getBookMetadata();
+            
+            // TUYỆT CHIÊU GỘP: Tạo object book chứa cả ID gốc và dữ liệu user vừa nhập sai
+            const fakeBook = {
+                _id: req.params.id,
+                ...req.body
+            };
+
+            return res.render('books/update', {
+                book: fakeBook, // Trả về fakeBook thay vì tách rời book và formData
+                categories,
+                statuses,
+                error: error.details[0].message
+            });
+        }
+
+        await bookService.updateBook(req.params.id, req.user._id, value);
+        res.redirect('/books');
+    } catch (err) { next(err); }
+}
+
+// delete book
+async function deleteBook(req, res, next) {
+    try {
+        const deleteBook = await bookService.deleteBook(req.params.id, req.user._id);
+        if(!deleteBook) {
+            const err = new Error('Không tìm thấy sách!');
+            err.status = 404;
+            return next(err); 
+        }
+
+        res.redirect('/books');
+    } catch (err) {
+        next(err)
+    }
+}
+
+// book detail
 async function bookDetail(req, res) {
     try {
         // Truyền cả ID sách trên URL và ID của User xuống Service
@@ -44,5 +141,12 @@ async function bookDetail(req, res) {
         res.status(500).send("Lỗi Server");
     }
 }
-
-module.exports = { getAll, bookDetail };
+module.exports = { 
+    getAll,
+    createBook,
+    create,
+    updateBook,
+    update,
+    deleteBook,
+    bookDetail
+};

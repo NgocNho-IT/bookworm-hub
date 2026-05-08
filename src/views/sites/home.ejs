@@ -1,6 +1,8 @@
 <%- include('../layouts/header', {title: title}) %>
 <%- include('../layouts/navbar') %>
 <div class="container mt-4">
+   
+   <% if (books && books.length > 0) { %>
    <h1>Danh sách sách đang có</h1>
    <br>
    <div class="row">
@@ -20,7 +22,11 @@
       </div>
       <% }) %>
    </div>
-
+   <% } else { %>
+      <h1>Hiện tại bạn chưa có quyển sách nào. Hãy thêm nhé!</h1>
+   <% } %>
+   
+      <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
    <nav aria-label="Page navigation" class="mt-5">
       <ul class="pagination justify-content-center">
          <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
@@ -36,6 +42,6 @@
          </li>
       </ul>
    </nav>
-   
+   <% } %>
 </div>
 <%- include('../layouts/footer') %>

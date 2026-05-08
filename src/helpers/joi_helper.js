@@ -71,7 +71,48 @@ const loginSchema = Joi.object({
     }),
 });
 
+
+const currentYear = new Date().getFullYear();
+
+const bookSchema = Joi.object({
+    subject: Joi.string().trim().required().messages({
+        'string.base': 'Tiêu đề sách phải là chuỗi ký tự',
+        'string.empty': 'Tiêu đề sách không được để trống',
+        'any.required': 'Vui lòng nhập tiêu đề sách'
+    }),
+    
+    author: Joi.string().trim().required().messages({
+        'string.base': 'Tên tác giả phải là chuỗi ký tự',
+        'string.empty': 'Tên tác giả không được để trống',
+        'any.required': 'Vui lòng nhập tên tác giả'
+    }),
+    
+    publication_year: Joi.number().integer().min(1000).max(currentYear).optional().messages({
+        'number.base': 'Năm xuất bản phải là một số',
+        'number.min': 'Năm xuất bản không hợp lệ (nhỏ nhất là năm 1000)',
+        'number.max': `Năm xuất bản không được lớn hơn năm hiện tại (${currentYear})`
+    }),
+    
+    // Validate ObjectId của MongoDB (chuỗi Hex dài 24 ký tự)
+    idCategory: Joi.string().hex().length(24).required().messages({
+        'string.hex': 'ID Danh mục không đúng định dạng',
+        'string.length': 'ID Danh mục phải có đúng 24 ký tự',
+        'any.required': 'Vui lòng chọn danh mục cho sách'
+    }),
+    
+    idStatus: Joi.string().hex().length(24).required().messages({
+        'string.hex': 'ID Trạng thái không đúng định dạng',
+        'string.length': 'ID Trạng thái phải có đúng 24 ký tự',
+        'any.required': 'Vui lòng chọn trạng thái cho sách'
+    }),
+    image: Joi.string().allow('', null).optional(),
+    
+    description: Joi.string().allow('', null).optional()
+    
+
+});
 module.exports = {
   createUserSchema,
-  loginSchema
+  loginSchema,
+  bookSchema
 };

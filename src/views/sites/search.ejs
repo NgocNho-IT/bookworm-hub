@@ -2,13 +2,11 @@
 <%- include('../layouts/navbar') %>
 
 <div class="container mt-4">
-    <h1>Kết quả cho keyword: "<%= keyword %>"</h1>
-    <br>
-    <p>Danh sách này bao gồm:</p>
-    <br>
-
-    <div class="row">
-
+        <% if (books && books.length > 0) { %>
+            <div class="row">
+        <h1>Kết quả cho keyword: "<%= keyword %>"</h1>
+        <br>
+        <p>Danh sách này bao gồm:</p>
         <% books.forEach(book => { %>
             
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"> <div class="card h-100" style="width: 100%;"> <img src="<%= book.image %>" class="card-img-top" alt="<%= book.subject %>" style="height: 250px; object-fit: contain; padding: 10px;">
@@ -25,6 +23,10 @@
 
         <% }) %>
         </div>
+        <% } else { %>
+            <h1>Hiện tại bạn chưa có quyển sách nào. Hãy thêm nhé!</h1>
+        <% } %>
+        
 </div>
 
 <%- include('../layouts/footer') %>

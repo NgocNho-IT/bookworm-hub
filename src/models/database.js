@@ -1,12 +1,10 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
-
-// MongoDB connection URI
-const MONGODB_URI = 'mongodb://localhost:27017/bookworm_hub';
 
 // Kết nối MongoDB
 async function connectDB() {
     try {
-        await mongoose.connect(MONGODB_URI);
+        await mongoose.connect(process.env.MONGODB_URI);
         console.log('Kết nối MongoDB thành công!');
         console.log(`Database: ${mongoose.connection.name}`);
     } catch (error) {

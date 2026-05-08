@@ -23,7 +23,7 @@ async function home(req, res) {
 
 async function filterByCategory(req, res) {
     try {
-        // LỌC THEO DANH MỤC: Không truyền page/perPage => Service sẽ lấy hết[cite: 2]
+        // LỌC THEO DANH MỤC: Không truyền page/perPage => Service sẽ lấy hết
         const options = { 
             categorySlug: req.params.cate 
         };
@@ -60,7 +60,7 @@ async function search(req, res) {
         const keyword = req.query.q;
         if (!keyword) return res.redirect("/");
         
-        // TÌM KIẾM: Hiện tại cũng sẽ hiển thị toàn bộ kết quả tìm được[cite: 2]
+        // TÌM KIẾM: Hiện tại cũng sẽ hiển thị toàn bộ kết quả tìm được
         const options = { 
             search: keyword 
         };

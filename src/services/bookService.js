@@ -60,7 +60,60 @@ async function getBooksAdvanced(userId, options = {}) {
     }
 }
 
+// create book
+async function createBook(bookData, userId) {
+    try {
+        const newBook = new Book({
+        ...bookData,
+        idUser: userId
+    });
+    
+        return await newBook.save();
+    } catch (err) {
 
+    }
+    
+}
+
+// update book
+async function updateBook(bookId, userId, updateData) {
+    try {
+        const updatedBook = await Book.findOneAndUpdate(
+            { _id: bookId, idUser: userId},
+            updateData,
+            { new: true }
+        );
+        return updateBook;
+
+    } catch (err) {
+
+    }
+}
+
+// delete book
+async function deleteBook(bookId, userId) {
+    try {
+        const deleteBook = await Book.findOneAndDelete({
+            _id: bookId,
+            idUser: userId
+        });
+        return deleteBook;
+    } catch (err) {
+
+    }
+}
+
+// get categories and statuses collection
+async function getBookMetadata() {
+    try {
+        const categories = await Category.find();
+        const statuses = await Status.find();
+        return { categories, statuses };
+    } catch (err) {
+
+    }
+}
+// book detail
 async function getBookById(bookId, userId) {
     try {
         // Tìm đúng ID sách VÀ đúng ID của người dùng đang đăng nhập
@@ -78,5 +131,9 @@ async function getBookById(bookId, userId) {
 // Xuất hàm ra theo phong cách cũ
 module.exports = {
     getBooksAdvanced,
-    getBookById
+    getBookMetadata,
+    createBook,
+    updateBook,
+    deleteBook,
+    getBookById,
 };

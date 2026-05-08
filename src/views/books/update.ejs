@@ -1,0 +1,80 @@
+<%- include('../layouts/header', {title: 'Update book'}) %>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0 text-center">Chỉnh Sửa Sách</h4>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <% if (typeof error !== 'undefined' && error) { %>
+                        <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; border-radius: 4px;">
+                            <%= error %>
+                        </div>
+                    <% } %>
+
+                    <form action="/books/update/<%= book._id %>?_method=PUT" method="POST">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tiêu đề sách <span class="text-danger">*</span></label>
+                            <input type="text" name="subject" class="form-control" value="<%= book.subject || '' %>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tác giả <span class="text-danger">*</span></label>
+                            <input type="text" name="author" class="form-control" value="<%= book.author || '' %>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Năm xuất bản</label>
+                            <input type="number" name="publication_year" class="form-control" value="<%= book.publication_year || '' %>">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Danh mục <span class="text-danger">*</span></label>
+                                <select name="idCategory" class="form-select">
+                                    <option value="" disabled>-- Chọn danh mục --</option>
+                                    <% categories.forEach(cate => { %>
+                                        <option value="<%= cate._id %>" <%= (book.idCategory && book.idCategory.toString() === cate._id.toString()) ? 'selected' : '' %>>
+                                            <%= cate.name %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
+                                <select name="idStatus" class="form-select">
+                                    <option value="" disabled>-- Chọn trạng thái --</option>
+                                    <% statuses.forEach(stat => { %>
+                                        <option value="<%= stat._id %>" <%= (book.idStatus && book.idStatus.toString() === stat._id.toString()) ? 'selected' : '' %>>
+                                            <%= stat.name %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Link hình ảnh</label>
+                            <input type="text" name="image" class="form-control" value="<%= book.image || '' %>">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Mô tả sách</label>
+                            <textarea name="description" class="form-control" rows="3"><%= book.description || '' %></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg">Cập nhật thay đổi</button>
+                            <a href="/books" class="btn btn-outline-secondary">Hủy bỏ</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
