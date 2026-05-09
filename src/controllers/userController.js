@@ -1,7 +1,5 @@
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const User = require('../models/users.js');
 const { createUserSchema, loginSchema } = require('../helpers/joi_helper');
+const userService = require('../services/userService');
 
 async function showRegister(req, res) {
     res.render('users/register', { error: null, formData: {} })
@@ -9,49 +7,12 @@ async function showRegister(req, res) {
 
 async function register(req, res) {
     try {
-        const {error, value} = createUserSchema.validate(req.body);
-        if (error) {
-            return res.render('users/register', {
-                error: error.details[0].message,
-                formData: req.body
-            });
-        }
-
-        // Kiểm tra name đã tồn tại chưa
-        const existingUser = await User.findOne({ name: value.name });
-        if (existingUser) {
-            return res.render('users/register', {
-                error: 'Tên người dùng đã tồn tại',
-                formData: req.body
-            });
-        }
-
-        // Kiểm tra email đã tồn tại chưa
-        const existingEmail = await User.findOne({ email: value.email });
-        if (existingEmail) {
-            return res.render('users/register', {
-                error: 'Email đã được sử dụng',
-                formData: req.body
-            });
-        }
-
-        // Mã hóa mật khẩu trước khi lưu vào database
-        const hashedPassword = await bcrypt.hash(value.password, 10);
-
-        // Tạo người dùng mới
-        await User.insertOne({
-            name: value.name,
-            email: value.email,
-            password: hashedPassword,
-        });
-
-
+        await userService.registerUser(req.body);
         // Chuyển hướng tới trang đăng nhập với thông báo thành công
         res.redirect('/users/login?success=true');
-
     } catch (err) {
         res.render('users/register', {
-            error: 'Đã có lỗi xảy ra. Vui lòng thử lại.',
+            error: err.message,
             formData: req.body
         });
     }
@@ -66,45 +27,7 @@ async function showLogin(req, res) {
 // Xử lý đăng nhập
 async function login(req, res, next) {
     try {
-        // Validate
-        const {error, value} = loginSchema.validate(req.body);
-        if (error) {
-            return res.render('users/login', {
-                error: error.details[0].message,
-                success: null,
-                formData: req.body
-            });
-        }
-
-
-        // Check user theo name
-        const userData = await User.findOne({name: value.name});
-        // console.log(userData);
-        if (!userData) {
-            return res.render('users/login', {
-                error: 'Sai tên người dùng hoặc mật khẩu',
-                success: null,
-                formData: req.body
-            });
-        }
-
-        // Xác thực password
-        const isPasswordValid = await bcrypt.compare(value.password, userData.password);
-        if (!isPasswordValid) {
-            return res.render('users/login', {
-                error: 'Sai tên người dùng hoặc mật khẩu',
-                success: null,
-                formData: req.body
-            });
-        }
-
-        // Tạo và lưu session id vào database
-        const sessionId = crypto.randomBytes(16).toString('hex');
-        await User.updateOne(
-            { name: userData.name },
-            { $set: { sessionId: sessionId } }
-        );
-
+        const sessionId = await userService.loginUser(req.body.name, req.body.password);
         // Set cookie session
         res.cookie(
             'sessionId',
@@ -118,27 +41,23 @@ async function login(req, res, next) {
 
         res.redirect('/');
     } catch (err) {
-        next(err);
+        res.render('users/login', {
+            error: err.message,
+            success: null,
+            formData: req.body
+        })
     }
 }
 
 // Xử lý đăng xuất
-async function logout(req, res) {
+async function logout(req, res, next) {
     try {
         const sessionId = req.signedCookies.sessionId;
-        if (sessionId) {
-            // Xóa session ID khỏi db
-            await User.updateOne(
-                { sessionId: sessionId},
-                { $set: {sessionId: null}}
-            );
-
-            // Clear cookie
-            res.clearCookie('sessionId');
-
-            // Chuyển hướng đến trang đăng nhập
-            res.redirect('/users/login');
-        }
+        await userService.logoutUser(sessionId);
+        // Clear cookie
+        res.clearCookie('sessionId');
+        // Chuyển hướng đến trang đăng nhập
+        res.redirect('/users/login');
     } catch (err) {
         next(err);
     }

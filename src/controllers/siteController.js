@@ -7,13 +7,10 @@ async function home(req, res, next) {
             perPage: 4 
         };
         const result = await bookService.getBooksAdvanced(req.user._id, options);
-        const { categories, statuses } = await bookService.getBookMetadata();
         res.render('sites/home', { 
             books: result.books,
             currentPage: result.currentPage,
             totalPages: result.totalPages,
-            categories,
-            statuses,
             title: 'Home page' 
         });
     } catch (err) { 
