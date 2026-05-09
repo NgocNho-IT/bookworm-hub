@@ -26,27 +26,27 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Password là bắt buộc'],
       minlength: [6, 'Password phải có ít nhất 6 ký tự'],
     },
-    address: {
-      street: {
-        type: String,
-        trim: true,
-      },
-      city: {
-        type: String,
-        trim: true,
-      },
-      country: {
-        type: String,
-        trim: true,
-      },
-    },
-    languages: {
-      type: [String],
-      default: [],
-    },
-    bio: {
-      type: String,
-    },
+    // address: {
+    //   street: {
+    //     type: String,
+    //     trim: true,
+    //   },
+    //   city: {
+    //     type: String,
+    //     trim: true,
+    //   },
+    //   country: {
+    //     type: String,
+    //     trim: true,
+    //   },
+    // },
+    // languages: {
+    //   type: [String],
+    //   default: [],
+    // },
+    // bio: {
+    //   type: String,
+    // },
     sessionId: {
       type: String,
       default: null,

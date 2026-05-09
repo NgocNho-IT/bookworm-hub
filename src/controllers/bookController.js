@@ -1,6 +1,6 @@
 const bookService = require('../services/bookService');
-const { bookSchema } = require('../helpers/joi_helper');
-async function getAll(req, res) {
+
+async function getAll(req, res, next) {
     try {
         const options = {
             search: req.query.q,
@@ -19,13 +19,10 @@ async function getAll(req, res) {
             currentQuery: req.query, 
             title: 'Book page'
         });
-
     } catch (err) {
        next(err);
     }
 }
-
-
 
 async function createBook(req, res, next) {
     try {
@@ -39,14 +36,12 @@ async function createBook(req, res, next) {
     } catch (err) { next(err); }
 }
 
-
 async function create(req, res, next) {
     try {
         await bookService.createBook(req.body, req.user._id);
         res.redirect('/books');
     } catch (err) { next(err); }
 }
-
 
 async function updateBook(req, res, next) {
     try {
@@ -64,7 +59,6 @@ async function updateBook(req, res, next) {
     } catch (err) { next(err); }
 }
 
-
 async function update(req, res, next) {
     try {
         await bookService.updateBook(req.params.id, req.user._id, req.body);
@@ -72,38 +66,26 @@ async function update(req, res, next) {
     } catch (err) { next(err); }
 }
 
-// delete book
+// Xóa sách: Đã dọn dẹp IF dư thừa
 async function deleteBook(req, res, next) {
     try {
-        const deleteBook = await bookService.deleteBook(req.params.id, req.user._id);
-        if(!deleteBook) {
-            const err = new Error('Không tìm thấy sách!');
-            err.status = 404;
-            return next(err); 
-        }
-
+        await bookService.deleteBook(req.params.id, req.user._id);
         res.redirect('/books');
     } catch (err) {
-        next(err)
+        next(err);
     }
 }
 
-// book detail
+
 async function bookDetail(req, res, next) {
     try {
         const book = await bookService.getBookById(req.params.id, req.user._id);
-        
-        if (!book) {
-            const err = new Error('Không tìm thấy sách!');
-            err.status = 404;
-            return next(err); 
-        }
-        
         res.render('books/detail', { book, title: 'Book detail' });
     } catch (err) {
         next(err);
     }
 }
+
 module.exports = { 
     getAll,
     createBook,

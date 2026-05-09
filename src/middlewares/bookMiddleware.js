@@ -16,6 +16,7 @@ async function validateBook(req, res, next) {
                 book: { ...req.body, _id: req.params.id }
             })
         }
+        next();
     } catch (err) {
         next(err);
     }
