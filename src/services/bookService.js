@@ -5,7 +5,7 @@ const Status = require('../models/statuses');
 async function getBooksAdvanced(userId, options = {}) {
     try {
         const { search, categorySlug, statusSlug, page, perPage } = options;
-        let filter = { idUser: userId };
+        let filter = { idUser: userId};
 
         if (search) {
             filter.subject = { $regex: search, $options: 'i' };

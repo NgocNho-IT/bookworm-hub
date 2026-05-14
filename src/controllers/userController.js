@@ -1,4 +1,4 @@
-const { createUserSchema, loginSchema } = require('../helpers/joi_helper');
+
 const userService = require('../services/userService');
 
 async function showRegister(req, res) {
